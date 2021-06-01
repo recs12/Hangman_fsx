@@ -1,4 +1,4 @@
- 
+
 open System
 
 module Counter =
@@ -6,14 +6,14 @@ module Counter =
     type State = {
         hidden: string;
         secret: string;
-        picked: List<char>;
+        picked': List<char>;
     }
-
+    //add tries = 12 later.
 
     let init = {
         hidden = "_ _ _ _ _";
         secret = "coconut";
-        picked = [];
+        picked' = [];
         }
 
 
@@ -22,29 +22,29 @@ module Counter =
 
     let update (msg: Msg) (state: State) : State =
         match msg with
-        | Try -> { state with hidden = "_ _ _"; secret = "coco"; picked = [] }
+        | Try -> { state with hidden = "_ _ _"; secret = "coco"; picked' = [] }
 
 
     // Split word into list of char.
-    let splitIntoList text : List<char> =
-        Seq.toList text
+    let splitIntoList text' : List<char> =
+        Seq.toList text'
 
 
     // Generate list from a word
-    let createWordFromList lt =
+    let createWordFromList lt' =
         //la = System.String.Concat()
-        let lt' = List.map string lt
-        String.concat " " (Array.ofList(lt'))
+        let lt = List.map string lt'
+        String.concat " " (Array.ofList(lt))
 
 
     // Gives the length of a given list.
-    let getLengthFromList listGiven : int =
-        List.length listGiven
+    let getLengthFromList lt' : int =
+        List.length lt'
 
 
-    let rec wordListWithSpaces word =
+    let rec wordListWithSpaces word' =
         //["a"; "b" ; "c"] -> ["a "; "b "; "c"]
-        match word with
+        match word' with
         | [] -> []
         | [head] -> [head]
         | x :: xs -> (x + " ")  :: wordListWithSpaces xs
@@ -56,11 +56,22 @@ module Counter =
         //do something.
         0
 
+    let display secret' picked' =
+        secret'
+        |> List.map (fun _ -> if (List.contains _ picked') then _ else "_")
+
+
     // List.contains 5 [2..2..10]
+    let HideLetters secret picked' =
+        let secret' = splitIntoList secret
+        let h = display secret' picked'
+        h
 
 
-    let mutable CurrentState:State = {init with secret = init.secret; hidden = init.hidden; picked = init.picked} 
-    let l = CurrentState.hidden
-    while (List.contains "_" ) do
-        printfn "-Hidden: %A\n-Secret %A\n-Picked %A" CurrentState.hidden CurrentState.secret CurrentState.picked
-        printfn "\nPick a new letter ?: "
+    let mutable CurrentState:State = {init with secret = init.secret; hidden = init.hidden; picked' = init.picked'} 
+    let hiddenCharList = CurrentState.hidden
+    while true do
+        printfn "-Hidden: %A\n-Secret %A\n-Picked %A" CurrentState.hidden CurrentState.secret CurrentState.picked'
+        printfn "\nEnter a letter ?: "
+        let mutable x = System.Console.ReadLine()
+        0 |> ignore
