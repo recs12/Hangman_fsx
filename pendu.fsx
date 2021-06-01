@@ -11,7 +11,7 @@ module Counter =
     //add tries = 12 later.
 
     let init = {
-        hidden = "_ _ _ _ _";
+        hidden = "";
         secret = "coconut";
         picked' = [];
         }
@@ -56,16 +56,16 @@ module Counter =
         //do something.
         0
 
-    let display secret' picked' =
-        secret'
-        |> List.map (fun _ -> if (List.contains _ picked') then _ else "_")
+    let rec foo secret' picked' =
+        match secret' with
+        | [] -> []
+        | x :: xs -> (if not (List.contains x picked') then x else "_") :: foo xs picked'
 
 
     // List.contains 5 [2..2..10]
     let HideLetters secret picked' =
         let secret' = splitIntoList secret
-        let h = display secret' picked'
-        h
+        0
 
 
     let mutable CurrentState:State = {init with secret = init.secret; hidden = init.hidden; picked' = init.picked'} 
