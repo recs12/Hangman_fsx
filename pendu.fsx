@@ -70,8 +70,13 @@ module Counter =
 
     let mutable CurrentState:State = {init with secret = init.secret; hidden = init.hidden; picked' = init.picked'} 
     let hiddenCharList = CurrentState.hidden
-    while true do
+    // isHidden = 
+    let mutable playerTries = 12
+    while (playerTries > 0)  do
         printfn "-Hidden: %A\n-Secret %A\n-Picked %A" CurrentState.hidden CurrentState.secret CurrentState.picked'
         printfn "\nEnter a letter ?: "
+        printfn "to exit press (ctrl + C)"
         let mutable x = System.Console.ReadLine()
+        playerTries <- playerTries - 1
         0 |> ignore
+    printfn "You have exeeded your number of tries!"
