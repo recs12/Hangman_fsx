@@ -1,5 +1,3 @@
-open System
-
 module Hangman =
 
     type State =
@@ -21,7 +19,6 @@ module Hangman =
 
     // Generate list from a word
     let createWordFromList lt' =
-        //la = System.String.Concat()
         let lt = List.map string lt'
         String.concat " " (Array.ofList (lt))
 
@@ -47,21 +44,17 @@ module Hangman =
         | [] -> []
         | x :: xs ->
             (if not (List.contains x picked') then
-                 x
-             else
-                 "_")
+                "_"
+             else x )
             :: addUnderscores xs picked'
 
-    let transformationType lChars = 
+    let transformationType lChars =
         lChars |> List.map (fun x -> string(x))
 
     let HideLetters secret picked' =
         let secret' = splitIntoList secret
-        // change a list of char to a list of string.
         let secret'' = transformationType secret'
         let display = addUnderscores secret'' picked'
-        // change the list to a word
-        // add space to the word
         let word = createWordFromList display
         word
 
@@ -73,21 +66,19 @@ module Hangman =
 
     let hiddenCharList = CurrentState.hidden
     let mutable playerTries = 12
-
     while (playerTries > 0) do
-        printfn "\n(exit: ctrl + C) Enter a letter ?: "
-        printfn ""
-
+        printfn "\n(exit: ctrl + C) Enter a letter ?: \n"
         let mutable x = char (System.Console.ReadLine())
-
         if not (List.contains x CurrentState.picked') then
             CurrentState.picked' <- x :: CurrentState.picked'
-
         CurrentState.hidden <-  HideLetters CurrentState.secret (transformationType CurrentState.picked')
-
         playerTries <- playerTries - 1
         printfn "-Hidden: %A\n-Secret %A\n-Picked %A" CurrentState.hidden CurrentState.secret CurrentState.picked'
         printfn "Chances left: %A" playerTries
-        0 |> ignore
-
+        // 0 |> ignore
     printfn "You have exeeded 12 tries!"
+
+// TODO: stop the game when the word is unhide!
+// TODO: hide the secret!
+// TODO: hide picked!
+// TODO: App pick a random veggy!
