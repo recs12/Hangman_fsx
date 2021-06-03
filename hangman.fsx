@@ -1,3 +1,5 @@
+open System
+
 module Hangman =
 
     type State =
@@ -23,10 +25,6 @@ module Hangman =
         String.concat " " (Array.ofList (lt))
 
 
-    // Gives the length of a given list.
-    let getLengthFromList lt' : int = List.length lt'
-
-
     let rec wordListWithSpaces word' =
         //["a"; "b" ; "c"] -> ["a "; "b "; "c"]
         match word' with
@@ -42,14 +40,12 @@ module Hangman =
     let rec addUnderscores secret' picked' =
         match secret' with
         | [] -> []
-        | x :: xs ->
-            (if not (List.contains x picked') then
-                "_"
-             else x )
-            :: addUnderscores xs picked'
+        | x :: xs -> (if not (List.contains x picked') then "_" else x ) :: addUnderscores xs picked'
+
 
     let transformationType lChars =
         lChars |> List.map (fun x -> string(x))
+
 
     let HideLetters secret picked' =
         let secret' = splitIntoList secret
@@ -58,27 +54,34 @@ module Hangman =
         let word = createWordFromList display
         word
 
+
     let mutable CurrentState : State =
         { init with
               secret = init.secret
               hidden = init.hidden
               picked' = init.picked' }
 
-    let hiddenCharList = CurrentState.hidden
-    let mutable playerTries = 12
-    while (playerTries > 0) do
+
+    let mutable chances = 12
+
+    while (chances >= 0) do
         printfn "\n(exit: ctrl + C) Enter a letter ?: \n"
         let mutable x = char (System.Console.ReadLine())
         if not (List.contains x CurrentState.picked') then
             CurrentState.picked' <- x :: CurrentState.picked'
-        CurrentState.hidden <-  HideLetters CurrentState.secret (transformationType CurrentState.picked')
-        playerTries <- playerTries - 1
-        printfn "-Hidden: %A\n-Secret %A\n-Picked %A" CurrentState.hidden CurrentState.secret CurrentState.picked'
-        printfn "Chances left: %A" playerTries
-        // 0 |> ignore
-    printfn "You have exeeded 12 tries!"
 
-// TODO: stop the game when the word is unhide!
+        CurrentState.hidden <-  HideLetters CurrentState.secret (transformationType CurrentState.picked')
+        printfn "-Hidden: %A\n-Secret %A\n-Picked %A" CurrentState.hidden CurrentState.secret CurrentState.picked'
+
+        match (CurrentState.hidden.Contains("_")) with
+        | false ->
+            printfn "Answome! You win!"
+            Environment.Exit 55
+        | true ->
+            printfn "Chances left: %A" chances
+            chances <- chances - 1
+    printfn "You lost!"
+
 // TODO: hide the secret!
 // TODO: hide picked!
 // TODO: App pick a random veggy!
