@@ -1,18 +1,19 @@
 open System
-
+open Drawings
 module Hangman =
 
     type State =
         { mutable hidden: string
           mutable secret: string
-          mutable picked': List<char> }
-    //add tries = 12 later.
+          mutable picked': List<char>
+          mutable chances : int}
 
 
     let init =
         { hidden = ""
           secret = "coconut"
-          picked' = [] }
+          picked' = []
+          chances = 12}
 
 
     // Split word into list of char.
@@ -55,6 +56,11 @@ module Hangman =
         word
 
 
+    let PresentPickedLetters picked' =
+        let word = createWordFromList picked'
+        word
+
+
     let mutable CurrentState : State =
         { init with
               secret = init.secret
@@ -62,26 +68,26 @@ module Hangman =
               picked' = init.picked' }
 
 
-    let mutable chances = 12
-
-    while (chances >= 0) do
+    while (CurrentState.chances >= 0) do
         printfn "\n(exit: ctrl + C) Enter a letter ?: \n"
         let mutable x = char (System.Console.ReadLine())
         if not (List.contains x CurrentState.picked') then
             CurrentState.picked' <- x :: CurrentState.picked'
 
         CurrentState.hidden <-  HideLetters CurrentState.secret (transformationType CurrentState.picked')
-        printfn "-Hidden: %A\n-Secret %A\n-Picked %A" CurrentState.hidden CurrentState.secret CurrentState.picked'
+        printfn "-Hidden: %A\n-Secret* %A\n-Picked %A" CurrentState.hidden CurrentState.secret (PresentPickedLetters CurrentState.picked')
 
         match (CurrentState.hidden.Contains("_")) with
         | false ->
             printfn "Answome! You win!"
             Environment.Exit 55
         | true ->
-            printfn "Chances left: %A" chances
-            chances <- chances - 1
+            HANGMANPICS.[CurrentState.chances]
+            printfn "Chances left: %A" CurrentState.chances
+            CurrentState.chances <- CurrentState.chances - 1
     printfn "You lost!"
 
+
 // TODO: hide the secret!
-// TODO: hide picked!
-// TODO: App pick a random veggy!
+// TODO: drawing of hangman
+// TODO: generator de veggies
