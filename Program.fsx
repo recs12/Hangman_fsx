@@ -1,9 +1,11 @@
 #load "Pictures.fsx"
+#load "Hangman.fsx"
 open System
 
 module Hangman =
 
     open Pictures
+    open Hangman
 
     type State =
         { mutable hidden: string
@@ -19,82 +21,49 @@ module Hangman =
           chances = 12}
 
 
-    // Split word into list of char.
-    let splitIntoList text' : List<char> = Seq.toList text'
-
-
-    // Generate list from a word
-    let createWordFromList lt' =
-        let lt = List.map string lt'
-        String.concat " " (Array.ofList (lt))
-
-
-    let rec wordListWithSpaces word' =
-        //["a"; "b" ; "c"] -> ["a "; "b "; "c"]
-        match word' with
-        | [] -> []
-        | [ head ] -> [ head ]
-        | x :: xs -> (x + " ") :: wordListWithSpaces xs
-
-
-    let inline replace list a b =
-        list |> Seq.map (fun x -> if x = a then b else x)
-
-
-    let rec addUnderscores secret' picked' =
-        match secret' with
-        | [] -> []
-        | x :: xs -> (if not (List.contains x picked') then "_" else x ) :: addUnderscores xs picked'
-
-
-    let transformationType lChars =
-        lChars |> List.map (fun x -> string(x))
-
-
-    let HideLetters secret picked' =
-        let secret' = splitIntoList secret
-        let secret'' = transformationType secret'
-        let display = addUnderscores secret'' picked'
-        let word = createWordFromList display
-        word
-
-
-    let PresentPickedLetters picked' =
-        let word = createWordFromList picked'
-        word
-
-
-    let mutable CurrentState : State =
+    let mutable currentState : State =
         { init with
               secret = init.secret
               hidden = init.hidden
-              picked' = init.picked' 
+              picked' = init.picked'
               chances = init.chances }
 
 
-    while (CurrentState.chances > 0) do
-        printfn "%A" HANGMANPICS.[CurrentState.chances]
+    while (currentState.chances > 0) do
+
+        // Picture diplayed
+        printfn "%A" HANGMANPICS.[currentState.chances]
         printfn "\n(exit: ctrl + C) Enter a letter ?: \n"
-        let mutable x = char (System.Console.ReadLine())
-        if not (List.contains x CurrentState.picked') then
-            CurrentState.picked' <- x :: CurrentState.picked'
-        if not (CurrentState.secret.Contains(x)) then 
-            CurrentState.chances <- CurrentState.chances - 1
 
-        CurrentState.hidden <-  HideLetters CurrentState.secret (transformationType CurrentState.picked')
-        printfn "-Hidden: %A\n-Secret* %A\n-Picked %A" CurrentState.hidden CurrentState.secret (PresentPickedLetters CurrentState.picked')
+        // Input
+        let mutable pick = char (System.Console.ReadLine())
 
-        match (CurrentState.hidden.Contains("_")) with
+        // match pick with 
+        // | pick when (List.contains pick currentState.picked') = false 
+        //     -> currentState.picked' <- pick :: currentState.picked'
+
+        // | pick when (currentState.secret.Contains(pick)) = false
+        //     -> currentState.chances <- currentState.chances - 1
+        
+        if not (List.contains pick currentState.picked') then
+            currentState.picked' <- pick :: currentState.picked'
+        if not (currentState.secret.Contains(pick)) then
+            currentState.chances <- currentState.chances - 1
+
+        currentState.hidden <-  hideLetters currentState.secret (conversionType currentState.picked')
+        printfn "-Hidden: %A\n-Secret* %A\n-Picked %A" currentState.hidden currentState.secret (PresentPickedLetters currentState.picked')
+
+        match (currentState.hidden.Contains("_")) with
         | false ->
             printfn "Answome! You win!"
-            printfn "%A" winner
+            printfn "%A" DANCING
             Environment.Exit 55
         | true ->
-            printfn "Chances left: %A" CurrentState.chances
-    printfn "%A" finger
+            printfn "Chances left: %A" currentState.chances
+
+    printfn "%A" FINGER
 
 
 // TODO: hide the secret!
-// TODO: drawing of hangman
 // TODO: generator de veggies
 // TODO: split side effects from pure functions
