@@ -41,6 +41,6 @@ module  Hangman
         word
 
 
-    let PresentPickedLetters picked' =
+    let presentPickedLetters picked' =
         let word = createWordFromList picked'
         word

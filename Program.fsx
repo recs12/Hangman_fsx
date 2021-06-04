@@ -51,7 +51,7 @@ module Hangman =
             currentState.chances <- currentState.chances - 1
 
         currentState.hidden <-  hideLetters currentState.secret (conversionType currentState.picked')
-        printfn "-Hidden: %A\n-Secret* %A\n-Picked %A" currentState.hidden currentState.secret (PresentPickedLetters currentState.picked')
+        printfn "-Hidden: %A\n-Secret* %A\n-Picked %A" currentState.hidden currentState.secret (presentPickedLetters currentState.picked')
 
         match (currentState.hidden.Contains("_")) with
         | false ->
@@ -65,5 +65,7 @@ module Hangman =
 
 
 // TODO: hide the secret!
-// TODO: generator de veggies
+// TODO: random generator de veggies (inside the code) then (micro-services)
 // TODO: split side effects from pure functions
+// TODO: check if only one char is entered or not null.
+//
