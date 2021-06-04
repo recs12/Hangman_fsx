@@ -1,11 +1,13 @@
-module Drawings =
+module Pictures
 
-    let HANGMANPICS = [@"
-
-
+      let HANGMANPICS = [@"
 
 
 
+
+
+
+    ========="; @"
     ========="; @"
 
 
@@ -84,3 +86,33 @@ module Drawings =
      / \  |
           |
     ========="]
+
+      let FINGER = @"
+You Lost! Bro...
+                      /´¯/)
+                    ,/¯  /
+                   /    /
+             /´¯/'   '/´¯¯`·¸
+          /'/   /    /       /¨¯\
+        ('(   ´   ´     ¯~/'   ')
+         \                 '     /
+          ''   \           _ ·´
+            \              (
+              \             \
+
+"
+
+      let DANCING = @"
+Yeeeeeessss Fantastic! You win!
+              ∩
+　　　　　　　＼＼
+　　　　　　　／　 ）
+⊂＼＿／￣￣￣　 ／
+　＼＿／   ° ͜ʖ ° （
+　　　）　　 　／⌒＼
+　　／　 ＿＿＿／⌒＼⊃
+　（　 ／
+　　＼＼
+     U
+
+"
